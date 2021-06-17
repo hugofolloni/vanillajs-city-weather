@@ -1,21 +1,20 @@
 *{
-    margin: 0;
+    margin: 0; 
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
+body{
     height: 100vh;
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    background: linear-gradient(45deg, rgb(46,150,163), rgb(48,62, 143));
     font-family: sans-serif;
-    color: white;
+    color: #eaeaea;
 }
 
-.location, .temperature{
+.location, .temp{
     height: 30vh;
     width: 30%;
     display: flex;
@@ -23,21 +22,26 @@ body {
     align-items: center;
 }
 
-.temperature{
+.temp {
     flex-direction: column;
 }
 
-.degree-section{
+.temperatureLabel {
     display: flex;
     align-items: center;
     cursor: pointer;
 }
 
-.degree-section span{
+.temperatureLabel span {
     margin: 10px;
     font-size: 30px;
 }
 
-.degree-section h2{
+.temperatureLabel h2{
     font-size: 40px;
+}
+
+.location canvas {
+    width: 21vh;
+    height: 21vh;
 }
