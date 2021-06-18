@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Weather</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id='body'>
+    <div class="time">
+        <h1 class="hourtime" id='hourtime'></h1>
+        <div class="inputs">
+            <input type="text" name="location" id="location" class='inputlocation'>
+            <input type="button" value="Search" id='button' class='inputbutton'>
+        </div>
+    </div>
+    <div class="location">
+        <h1 class="locationlabel" id='locationlabel'></h1>
+        <canvas class="icon" width='128' height='128'></canvas>
+    </div>
+
+    <div class="temp">
+        <div class="temperatureLabel">
+            <h2 class="temperature" id='temperature'></h2>
+            <span>ºC</span>
+        </div>
+        <div class="description" id='description'></div>
+    </div>
+    <script src="script.js"></script>
+    <script src="skycons.js"></script>
+</body>
+</html>
