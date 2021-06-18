@@ -3,7 +3,7 @@ var button = document.getElementById('button');
 var description = document.getElementById('description');
 var temp = document.getElementById('temperature');
 var nbhood = document.getElementById('locationlabel');
-var timelabel = document.getElementById('hourtime') 
+var timeLabel = document.getElementById('hourtime') 
 var body = document.getElementById('body');
 var locality = document.getElementById('locality')
 
@@ -25,7 +25,7 @@ function getWeather(){
             var minuteTime = String(today.getMinutes()).padStart(2, '0')
             var time = hourTime + ':' + minuteTime;
             console.log(time)
-            timelabel.textContent = time
+            timeLabel.textContent = time
 
             
             Promise.all([
@@ -66,6 +66,12 @@ function getWeather(){
         return skycons.set(iconID, Skycons[currentIcon]);
     }
 
+    input.addEventListener('keyup', function(event){
+        if(event.key === 'Enter'){
+            return searchWeather();
+        }
+    })
+
     button.addEventListener('click', searchWeather);
 
     function searchWeather(){
@@ -88,58 +94,55 @@ function getWeather(){
             console.log(newLocation)
             var lat = data.location.lat;
             var long = data.location.lon;
-            var timezoneyeah = data.location.tz_id
+            var localtime = data.location.localtime;
+            var localtimeCut = localtime.split(' ');
+            var localtimeFull = localtimeCut[1];
+            var localtimesFullSepareted = localtimeFull.split(':');
+            var minuteLocaltime = String(localtimesFullSepareted[1]).padStart(2, '0');
+            var justHourLocaltime = String(localtimesFullSepareted[0]).padStart(2, '0');
+            var today = new Date()
+            var minuteTime = String(today.getMinutes()).padStart(2, '0')
+            var array = [justHourLocaltime, minuteLocaltime, minuteTime]
+            console.log(array)
+            if (minuteLocaltime <= minuteTime){
+                timeLabel.textContent = justHourLocaltime + ':' + minuteTime
+            }
+            else if (minuteLocaltime > minuteTime){
+                if(justHourLocaltime = 23){
+                    timeLabel.textContent = '00:' + minuteTime
+                } else{
+                timeLabel.textContent = (parseInt(justHourLocaltime, 10) + 1) + ':' + minuteTime
+                }
+            }
             var nbhood = document.getElementById('locationlabel');
+            var isDay = data.current.is_day;
+
+            if(isDay == '1'){
+                body.style.cssText = 'background: #2980b9; background: -webkit-linear-gradient(to bottom, #2c3e50, #2980b9); background: linear-gradient(to bottom, #2c3e50, #2980b9);'
+                
+            }
+            else if (isDay =='0'){
+                body.style.cssText = 'background: #948E99; background: -webkit-linear-gradient(to bottom, #2E1437, #948E99);  background: linear-gradient(to bottom, #2E1437, #948E99);'
+            }
+
 
             var proxy = 'https://cors-anywhere.herokuapp.com/';
             var api = `${proxy}https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`
             
-                fetch(api)
-                .then(response =>{
-                    return response.json();
-                })
-                .then(data =>{
-                console.log(data)
-                var {temperature, summary, icon } = data.currently;
-                var locality = data.locality
-                temp.textContent = ((temperature - 32) * 5/9).toFixed(1);
-                description.textContent = summary; 
-                nbhood.textContent = newLocation
-                setIcons(icon, document.querySelector('.icon'));
-            })
-
-            var proxy = 'https://cors-anywhere.herokuapp.com/';
-            var timezone = `${proxy}https://timezoneapi.io/api/timezone/?${timezoneyeah}&token=aNWzSsqOjzQXIGTSymrD`
-
-            fetch(timezone)
+            fetch(api)
             .then(response =>{
                 return response.json();
             })
             .then(data =>{
-                console.log(data)
-                if(timezoneyeah === "America/Sao_Paulo"){
-                    var today = new Date()
-                    var hour = String(today.getHours()).padStart(2, '0') 
-                    var minutes = String(today.getMinutes()).padStart(2, '0')
-                    var timebyplace = hourTime + ':' + minuteTime;
-                } else{
-                    var hour = data.data.datetime.hour_24_wilz;
-                    var minutes = data.data.datetime.minutes;
-                    var timebyplace = hour + ':' + minutes;
-                }
-                console.log(timebyplace)
-                timelabel.textContent = timebyplace
-                
-                           
-            if(hour < 18 && hour > 6){
-                body.style.cssText = 'background: #2980b9; background: -webkit-linear-gradient(to bottom, #2c3e50, #2980b9); background: linear-gradient(to bottom, #2c3e50, #2980b9);'
-                
-            }
-            else{
-                body.style.cssText = 'background: #948E99; background: -webkit-linear-gradient(to bottom, #2E1437, #948E99);  background: linear-gradient(to bottom, #2E1437, #948E99);'
-            }
+            console.log(data)
+            var {temperature, summary, icon } = data.currently;
+            temp.textContent = ((temperature - 32) * 5/9).toFixed(1);
+            description.textContent = summary; 
+            nbhood.textContent = newLocation
+            setIcons(icon, document.querySelector('.icon'));
+            
+        })
 
-            })
         })
     }
 
