@@ -1,4 +1,5 @@
-//THINGS TO DO: Try to keep the F/C duality when refreshs, cuz if I'm using the F, when refreshs, it come back to  C
+//THINGS TO DO: CORS doesn't work properly in some PCs.
+
 
 var input = document.getElementById('location');
 var button = document.getElementById('button');
@@ -14,6 +15,23 @@ var locality = document.getElementById('locality')
 window.addEventListener('load', getWeather);
 
 function getWeather(){
+    (function() {
+        var cors_api_host = 'cors-anywhere.herokuapp.com';
+        var cors_api_url = 'https://' + cors_api_host + '/';
+        var slice = [].slice;
+        var origin = window.location.protocol + '//' + window.location.host;
+        var open = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function() {
+            var args = slice.call(arguments);
+            var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
+            if (targetOrigin && targetOrigin[0].toLowerCase() !== origin &&
+                targetOrigin[1] !== cors_api_host) {
+                args[1] = cors_api_url + args[1];
+            }
+            return open.apply(this, args);
+        };
+    })();
+
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(position => {
             long = position.coords.longitude;
@@ -40,27 +58,20 @@ function getWeather(){
                 var {temperature, summary, icon } = data[0].currently;
                 var locality = data[1].locality
                 temp.textContent = ((temperature - 32) * 5/9).toFixed(1);
-                console.log(degree.textContent)
-                console.log(temp.textContent)
                 temp.addEventListener('click', function(evt){
                     if(degree.textContent === 'ºC'){
                         temp.textContent = temperature.toFixed(1);
                         degree.textContent = '°F'
-                        console.log(temp.textContent);
-                        console.log(degree.textContent);
                     }
                     else if (degree.textContent === '°F'){
                         temp.textContent = ((temperature - 32) * 5/9).toFixed(1);
                         degree.textContent = 'ºC'
-                        console.log(temp.textContent);
-                        console.log(degree.textContent);
                     }
                 })
                 description.textContent = summary; 
                 nbhood.textContent = locality
 
                 var isDay = data[2].current.is_day
-                console.log(isDay)
                 setIcons(icon, document.querySelector('.icon'));
 
                 var reloadTemp = setInterval(function(){
@@ -77,29 +88,30 @@ function getWeather(){
                         var {temperature, summary, icon } = data[0].currently;
                         var locality = data[1].locality
                         temp.textContent = ((temperature - 32) * 5/9).toFixed(1);
-                        console.log(degree.textContent)
-                        console.log(temp.textContent)
                         temp.addEventListener('click', function(evt){
                             if(degree.textContent === 'ºC'){
                                 temp.textContent = temperature.toFixed(1);
                                 degree.textContent = '°F'
-                                console.log(temp.textContent);
-                                console.log(degree.textContent);
                             }
                             else if (degree.textContent === '°F'){
                                 temp.textContent = ((temperature - 32) * 5/9).toFixed(1);
                                 degree.textContent = 'ºC'
-                                console.log(temp.textContent);
-                                console.log(degree.textContent);
                             }
+                            
                         })
+                        if(degree.textContent === '°F'){
+                            temp.textContent = temperature.toFixed(1);
+                        }
+                        else if(degree.textContent === 'ºC'){
+                            temp.textContent = ((temperature - 32) * 5/9).toFixed(1);
+                        }
                         description.textContent = summary; 
                         nbhood.textContent = locality
         
                         var isDay = data[2].current.is_day
-                        console.log(isDay)
                         setIcons(icon, document.querySelector('.icon'));
                     })
+
                 }, 90 * 1000)
 
                 if(isDay == '1'){
@@ -113,7 +125,6 @@ function getWeather(){
                 var hourTime = String(today.getHours()).padStart(2, '0') 
                 var minuteTime = String(today.getMinutes()).padStart(2, '0')
                 var time = hourTime + ':' + minuteTime;
-                console.log(time)
                 timeLabel.textContent = time
 
                 var localReload = setInterval(function(){
@@ -198,8 +209,6 @@ function getWeather(){
             var justHourLocaltime = String(localtimesFullSepareted[0]).padStart(2, '0');
             var today = new Date()
             var minuteTime = String(today.getMinutes()).padStart(2, '0')
-            var array = [justHourLocaltime, minuteLocaltime, minuteTime]
-            console.log(array)
             if (parseInt(minuteLocaltime, 10) - parseInt(minuteTime, 10) > 30){
                 if(hourTime === '23'){
                     time = '00:' + minuteTime;
@@ -214,7 +223,6 @@ function getWeather(){
                 time = justHourLocaltime + ':' + minuteTime
                 timeLabel.textContent = time
             }
-            console.log(time)
             var nbhood = document.getElementById('locationlabel');
             var isDay = data.current.is_day;
 
@@ -235,7 +243,6 @@ function getWeather(){
                 var justHourLocaltime = String(localtimesFullSepareted[0]).padStart(2, '0');
                 var today = new Date()
                 var minuteTime = String(today.getMinutes()).padStart(2, '0')
-                var array = [justHourLocaltime, minuteLocaltime, minuteTime]
                 if (parseInt(minuteLocaltime, 10) - parseInt(minuteTime, 10) > 30){
                     if(hourTime === '23'){
                         time = '00:' + minuteTime;
@@ -274,8 +281,6 @@ function getWeather(){
             var crttemp = data.currently.temperature
             degree.textContent = "ºC"
             temp.textContent = ((crttemp - 32) * 5/9).toFixed(1);
-            console.log(temp.textContent);
-            console.log(degree.textContent)
             description.textContent = summary; 
             nbhood.textContent = newLocation
             setIcons(icon, document.querySelector('.icon'));
@@ -289,28 +294,30 @@ function getWeather(){
                 .then(data =>{
                 console.log(data)
                 var {summary, icon } = data.currently;
-                var crttemp = data.currently.temperature
-                degree.textContent = "ºC"
-                temp.textContent = ((crttemp - 32) * 5/9).toFixed(1);
-                console.log(temp.textContent);
-                console.log(degree.textContent)
+                var crttempr = data.currently.temperature
+
                 description.textContent = summary; 
                 nbhood.textContent = newLocation
                 setIcons(icon, document.querySelector('.icon'));
 
                 var whichdegree = degree.textContent;
+
+                if(whichdegree === 'ºF'){
+                    temp.textContent = crttempr.toFixed(1)
+                }
+                else if(whichdegree === '°C'){
+                    temp.textContent = ((crttempr - 32) * 5/9).toFixed(1);
+                }
+
+
                 temp.addEventListener('click',() => {
                     if(whichdegree === 'ºC'){
-                        temp.textContent = crttemp.toFixed(1)
+                        temp.textContent = crttempr.toFixed(1)
                         whichdegree = '°F'
-                        console.log(temp.textContent);
-                        console.log(degree.textContent);
                     }
                     else if(whichdegree === '°F'){
-                        temp.textContent = ((crttemp - 32) * 5/9).toFixed(1);
+                        temp.textContent = ((crttempr - 32) * 5/9).toFixed(1);
                         whichdegree = 'ºC'
-                        console.log(temp.textContent);
-                        console.log(degree.textContent);
                     }
                 })
                 })
@@ -338,14 +345,10 @@ function getWeather(){
                 if(whichdegree === 'ºC'){
                     temp.textContent = crttemp.toFixed(1)
                     whichdegree = '°F'
-                    console.log(temp.textContent);
-                    console.log(degree.textContent);
                 }
                 else if(whichdegree === '°F'){
                     temp.textContent = ((crttemp - 32) * 5/9).toFixed(1);
                     whichdegree = 'ºC'
-                    console.log(temp.textContent);
-                    console.log(degree.textContent);
                 }
             })
             
