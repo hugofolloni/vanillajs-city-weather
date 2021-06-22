@@ -1,6 +1,3 @@
-//THINGS TO DO: CORS doesn't work properly in some PCs.
-
-
 var input = document.getElementById('location');
 var button = document.getElementById('button');
 var description = document.getElementById('description');
@@ -15,23 +12,6 @@ var locality = document.getElementById('locality')
 window.addEventListener('load', getWeather);
 
 function getWeather(){
-    (function() {
-        var cors_api_host = 'cors-anywhere.herokuapp.com';
-        var cors_api_url = 'https://' + cors_api_host + '/';
-        var slice = [].slice;
-        var origin = window.location.protocol + '//' + window.location.host;
-        var open = XMLHttpRequest.prototype.open;
-        XMLHttpRequest.prototype.open = function() {
-            var args = slice.call(arguments);
-            var targetOrigin = /^https?:\/\/([^\/]+)/i.exec(args[1]);
-            if (targetOrigin && targetOrigin[0].toLowerCase() !== origin &&
-                targetOrigin[1] !== cors_api_host) {
-                args[1] = cors_api_url + args[1];
-            }
-            return open.apply(this, args);
-        };
-    })();
-
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(position => {
             long = position.coords.longitude;
@@ -39,7 +19,8 @@ function getWeather(){
             console.log(position);
             var nbhood = document.getElementById('locationlabel');
 
-            var proxy = 'https://cors-anywhere.herokuapp.com/';
+
+            var proxy = 'https://the-cors.herokuapp.com/';
             var api = `${proxy}https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`
             var location = `${proxy}https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${long}&localityLanguage=pt`
             var isdayapi = `${proxy}http://api.weatherapi.com/v1/current.json?key= 22370fad94b44b3c94300446211806&q=${lat},${long}&aqi=no`;
@@ -178,6 +159,9 @@ function getWeather(){
         }
     })
 
+    timeLabel.style.cssText = 'cursor:auto;'
+        
+
     button.addEventListener('click', searchWeather);
 
     function searchWeather(){
@@ -185,7 +169,7 @@ function getWeather(){
         console.log(location);
         
         
-        var proxy = 'https://cors-anywhere.herokuapp.com/';
+        var proxy = 'https://the-cors.herokuapp.com/';
         var api = `${proxy}http://api.weatherapi.com/v1/current.json?key= 22370fad94b44b3c94300446211806&q=${location}&aqi=no`;
 
         fetch(api)
@@ -268,7 +252,7 @@ function getWeather(){
                 }
             }, 1000);
 
-            var proxy = 'https://cors-anywhere.herokuapp.com/';
+            var proxy = 'https://the-cors.herokuapp.com/';
             var api = `${proxy}https://api.darksky.net/forecast/fd9d9c6418c23d94745b836767721ad1/${lat},${long}`
             
             fetch(api)
@@ -338,6 +322,7 @@ function getWeather(){
                     clearInterval(reloadTemp);
                 }
             })
+            
 
 
             
@@ -351,8 +336,25 @@ function getWeather(){
                     whichdegree = 'ºC'
                 }
             })
+
+
             
         })
+        timeLabel.style.cssText = 'cursor:pointer;'
+
+        timeLabel.addEventListener('click', function(evt) {
+            return getWeather();
         })
+
+        timeLabel.addEventListener('click', function(evt) {
+            clearInterval(localReload);
+            clearInterval(reloadTemp);
+        });
+        
+        
+        })
+    
+        
+
     }
 } 
