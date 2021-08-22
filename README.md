@@ -14,7 +14,7 @@ Exemplo de Horário Noturno:
 
 APIs USADAS:
 
-· cors-amywhere: usado para conseguir acessar dados de uma API externa e mostrá-los no site.
+· cors-anywhere: usado para conseguir acessar dados de uma API externa e mostrá-los no site.
 
 · bigdatacloud: consigo a localização do usuário (país, bairro, cidade...) com base na geolocalização do navegador.
 
