@@ -12,13 +12,9 @@ Exemplo de Horário Noturno:
 ![image](https://user-images.githubusercontent.com/82226141/130337707-5687b37e-e5a7-4be3-ba3c-f4b4de4a1977.png)
 
 
-APIs usadas:
+APIs USADAS:
 
-
-cors-amywhere: usado para conseguir acessar dados de uma API externa e mostrá-los no site.
-
-bigdatacloud: consigo a localização do usuário (país, bairro, cidade...) com base na geolocalização do navegador.
-
-darksky: consigo a temperatura e icone (aquele que fica girando) da localização (pelo navegador ou pesquisa).
-
-weatherapi: consigo informação se já amanheceu/anoiteceu (para o primeiro caso) e consigo a localização do usuário quando pesquisado.
+· cors-amywhere: usado para conseguir acessar dados de uma API externa e mostrá-los no site.
+· bigdatacloud: consigo a localização do usuário (país, bairro, cidade...) com base na geolocalização do navegador.
+· darksky: consigo a temperatura e icone (aquele que fica girando) da localização (pelo navegador ou pesquisa).
+· weatherapi: consigo informação se já amanheceu/anoiteceu (para o primeiro caso) e consigo a localização do usuário quando pesquisado.
